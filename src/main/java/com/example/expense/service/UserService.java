@@ -15,8 +15,15 @@ public class UserService {
         this.repo = repo;
     }
 
-    public void register(User user) {
+    public boolean register(User user) {
+
+        // check if username exists
+        if (repo.findByUsername(user.getUsername()).isPresent()) {
+            return false;
+        }
+
         repo.save(user);
+        return true;
     }
 
     public User login(String username, String password) {

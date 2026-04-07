@@ -23,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute User user, HttpSession session) {
+    public String login(@ModelAttribute User user, HttpSession session, Model model) {
 
         User validUser = service.login(user.getUsername(), user.getPassword());
 
@@ -32,6 +32,7 @@ public class AuthController {
             return "redirect:/";
         }
 
+        model.addAttribute("error", "Invalid username or password!");
         return "login";
     }
 
@@ -42,8 +43,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute User user) {
-        service.register(user);
+    public String register(@ModelAttribute User user, Model model) {
+
+        boolean success = service.register(user);
+
+        if (!success) {
+            model.addAttribute("error", "Username already exists!");
+            return "register";
+        }
+
         return "redirect:/login";
     }
 

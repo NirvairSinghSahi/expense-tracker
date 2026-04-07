@@ -17,12 +17,13 @@ public class ExpenseController {
         this.service = service;
     }
 
-    // 🏠 Home page (user-specific)
+    // 🏠 Home page
     @GetMapping("/")
     public String home(Model model, HttpSession session) {
 
         User user = (User) session.getAttribute("user");
 
+        // 🔥 FIX: prevent crash if not logged in
         if (user == null) {
             return "redirect:/login";
         }
@@ -34,13 +35,18 @@ public class ExpenseController {
         return "index";
     }
 
-    // ➕ Add
+    // ➕ Add expense
     @PostMapping("/add")
     public String addExpense(@ModelAttribute Expense expense,
                              HttpSession session) {
 
         User user = (User) session.getAttribute("user");
 
+        // 🔥 FIX: prevent null user crash
+        if (user == null) {
+            return "redirect:/login";
+        }
+
         expense.setUserId(user.getId());
 
         service.save(expense);
@@ -48,28 +54,53 @@ public class ExpenseController {
         return "redirect:/";
     }
 
-    // ❌ Delete
+    // ❌ Delete expense
     @GetMapping("/delete/{id}")
-    public String deleteExpense(@PathVariable Long id) {
+    public String deleteExpense(@PathVariable Long id,
+                                HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+
+        // 🔥 FIX
+        if (user == null) {
+            return "redirect:/login";
+        }
+
         service.delete(id);
+
         return "redirect:/";
     }
 
-    // ✏️ Edit page
+    // ✏️ Show edit page
     @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable Long id, Model model) {
+    public String editForm(@PathVariable Long id,
+                           Model model,
+                           HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+
+        // 🔥 FIX
+        if (user == null) {
+            return "redirect:/login";
+        }
+
         model.addAttribute("expense", service.getById(id));
+
         return "edit";
     }
 
-    // 🔄 Update
+    // 🔄 Update expense
     @PostMapping("/update")
     public String updateExpense(@ModelAttribute Expense expense,
                                 HttpSession session) {
 
         User user = (User) session.getAttribute("user");
 
-        // 🔥 ensure user stays same
+        // 🔥 FIX
+        if (user == null) {
+            return "redirect:/login";
+        }
+
         expense.setUserId(user.getId());
 
         service.save(expense);
@@ -77,7 +108,7 @@ public class ExpenseController {
         return "redirect:/";
     }
 
-    // 🔍 FILTER (FIXED)
+    // 🔍 Filter by category
     @GetMapping("/category")
     public String filter(@RequestParam String category,
                          Model model,
@@ -85,6 +116,7 @@ public class ExpenseController {
 
         User user = (User) session.getAttribute("user");
 
+        // 🔥 FIX
         if (user == null) {
             return "redirect:/login";
         }
