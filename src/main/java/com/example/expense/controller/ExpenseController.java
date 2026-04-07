@@ -17,13 +17,13 @@ public class ExpenseController {
         this.service = service;
     }
 
-    // 🏠 Home page
+    //  Home page
     @GetMapping("/")
     public String home(Model model, HttpSession session) {
 
         User user = (User) session.getAttribute("user");
 
-        // 🔥 FIX: prevent crash if not logged in
+        //  FIX: prevent crash if not logged in
         if (user == null) {
             return "redirect:/login";
         }
@@ -35,14 +35,14 @@ public class ExpenseController {
         return "index";
     }
 
-    // ➕ Add expense
+    //  Add expense
     @PostMapping("/add")
     public String addExpense(@ModelAttribute Expense expense,
                              HttpSession session) {
 
         User user = (User) session.getAttribute("user");
 
-        // 🔥 FIX: prevent null user crash
+        //  FIX: prevent null user crash
         if (user == null) {
             return "redirect:/login";
         }
@@ -54,14 +54,14 @@ public class ExpenseController {
         return "redirect:/";
     }
 
-    // ❌ Delete expense
+    //  Delete expense
     @GetMapping("/delete/{id}")
     public String deleteExpense(@PathVariable Long id,
                                 HttpSession session) {
 
         User user = (User) session.getAttribute("user");
 
-        // 🔥 FIX
+        //  FIX
         if (user == null) {
             return "redirect:/login";
         }
@@ -71,7 +71,7 @@ public class ExpenseController {
         return "redirect:/";
     }
 
-    // ✏️ Show edit page
+    // ✏ Show edit page
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id,
                            Model model,
@@ -79,7 +79,7 @@ public class ExpenseController {
 
         User user = (User) session.getAttribute("user");
 
-        // 🔥 FIX
+        //  FIX
         if (user == null) {
             return "redirect:/login";
         }
@@ -89,14 +89,14 @@ public class ExpenseController {
         return "edit";
     }
 
-    // 🔄 Update expense
+    //  Update expense
     @PostMapping("/update")
     public String updateExpense(@ModelAttribute Expense expense,
                                 HttpSession session) {
 
         User user = (User) session.getAttribute("user");
 
-        // 🔥 FIX
+        //  FIX
         if (user == null) {
             return "redirect:/login";
         }
@@ -116,7 +116,7 @@ public class ExpenseController {
 
         User user = (User) session.getAttribute("user");
 
-        // 🔥 FIX
+        //  FIX
         if (user == null) {
             return "redirect:/login";
         }
